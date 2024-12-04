@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Liste de taches à faire</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Déconnexion</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="list-taches">
+    <ion-item *ngFor="let tache of taches; let i = index">
+      <ion-card>
+        <ion-label class="list-tache-component" onclick="openTache(i)">
+          <h2>{{ tache.title }}</h2>
+          <p>Catégorie : {{ tache.category }} | Statut : {{ tache.status }}</p>
+          <p>À rendre : {{ tache.deadline }}</p>
+        </ion-label>
+        <ion-button (click)="updateStatus(i, 'En cours')">En cours</ion-button>
+        <ion-button (click)="updateStatus(i, 'Terminé')">Terminé</ion-button>
+        <ion-button (click)="deleteTask(i)">Supprimer</ion-button>
+    </ion-card>
+    </ion-item>
+  </ion-list>
+
+  <form [formGroup]="tacheForm" (ngSubmit)="addTask()">
+    <h2>Ajouter une tâche</h2>
+    <ion-item>
+      <ion-input placeholder="Titre" formControlName="title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select placeholder="Catégorie" formControlName="category">
+        <ion-select-option *ngFor="let cat of categories">{{ cat }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-datetime placeholder="Date limite" formControlName="deadline"></ion-datetime>
+    </ion-item>
+    <ion-button expand="block" type="submit" [disabled]="tacheForm.invalid">
+      Ajouter une tâche
+    </ion-button>
+  </form>
+</ion-content>

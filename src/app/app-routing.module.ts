@@ -1,14 +1,29 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthentificateurComponent } from 'src/app/authentificateur/authentificateur.component';
+import { TodoListComponent } from 'src/app/todo-list/todo-list.component';
+import { authGuard } from './services/authguard.guard';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    path: 'todo-list',
+    component: TodoListComponent,
+    pathMatch: 'full',
+    canActivate: [authGuard]
+  },
+  {
+    path: 'auth',
+    component: AuthentificateurComponent,
+    pathMatch: 'full'
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'auth',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
 ];
