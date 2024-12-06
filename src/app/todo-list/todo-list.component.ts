@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -16,7 +17,7 @@ import { AuthService } from '../services/auth.service';
 export class TodoListComponent implements OnInit {
 
   tacheForm: FormGroup;
-  constructor (private formBuilder: FormBuilder, private router: Router, private authService: AuthService) {
+  constructor (private formBuilder: FormBuilder, private router: Router, private authService: AuthService, private notifService: NotificationService) {
     this.tacheForm = this.formBuilder.group({
       title: ['', Validators.required],
       category: ['', Validators.required],
@@ -28,9 +29,16 @@ export class TodoListComponent implements OnInit {
 
   addTask() {
     if (this.tacheForm.valid) {
-      this.taches.push(this.tacheForm.value);
-      this.tacheForm.reset();
+      const tache = this.tacheForm.value;
+      this.taches.push(tache);
       this.saveTaches();
+
+      this.notifService.requestNotificationPermission();
+
+      this.notifService.scheduleNotification(tache, this.taches.length - 1);
+
+      this.tacheForm.reset();
+
     } else {
       console.error('Formulaire invalide');
     }
@@ -55,9 +63,13 @@ export class TodoListComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.loadCategories();
+
+    this.notifService.requestNotificationPermission();
   }
+
+  
 
   openTache( indexTache: number) {
     // TODO faire une page pour l'affichage d'une tache
@@ -68,5 +80,7 @@ export class TodoListComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+
+  
 
 }
