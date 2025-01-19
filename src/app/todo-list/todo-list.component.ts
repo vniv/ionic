@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { Tache } from '../models/tache.model';
+import { Utilis } from '../models/utilis.model';
 
 @Component({
   selector: 'app-todo-list',
@@ -26,12 +28,19 @@ export class TodoListComponent implements OnInit {
   }
   taches: Array<any> = [];
   categories = ['Courses', 'Travail', 'Personnel', 'Sport'];
+  groupedTasks: { [key: string]: any[] } = {};
 
   addTask() {
     if (this.tacheForm.valid) {
+      const currentUser = this.authService.getCurrentUser();
       const tache = this.tacheForm.value;
       this.taches.push(tache);
-      this.saveTaches();
+
+      if(currentUser) {
+        
+        currentUser.todoList = this.taches;
+        this.saveTaches(currentUser);
+      }
 
       this.notifService.requestNotificationPermission();
 
@@ -44,43 +53,51 @@ export class TodoListComponent implements OnInit {
     }
   }
 
+  groupTasksByCategory() {
+    this.groupedTasks = this.taches.reduce((acc, tache) => {
+      (acc[tache.category] = acc[tache.category] || []).push(tache);
+      return acc;
+    }, {});
+  }
+
   deleteTask(index: number) {
+    const currentUser = this.authService.getCurrentUser();
     this.taches.splice(index, 1);
+    currentUser.todoList = this.taches;
+    this.authService.updateCurrentUser(currentUser).subscribe();
   }
 
   updateStatus(index: number, status: string) {
+    const currentUser = this.authService.getCurrentUser();
     this.taches[index].status = status;
+    currentUser.todoList = this.taches;
+    this.saveTaches(currentUser);
   }
 
-  saveTaches() {
-    localStorage.setItem('taches', JSON.stringify(this.taches));
+  saveTaches(currentUser: Utilis) {
+    this.authService.updateCurrentUser(currentUser).subscribe();
+    localStorage.setItem('currentUser', JSON.stringify(this.taches));
   }
 
-  loadCategories() {
-    const listTaches = localStorage.getItem('taches');
-    if (listTaches) {
-      this.taches = JSON.parse(listTaches);
-    }
+  loadTaches() {
+    const currentUser = this.authService.getCurrentUser();
+    return currentUser ? currentUser.todoList : [];
+  }
+
+  getTodoById(id: string): Tache | undefined {
+    this.taches = this.loadTaches();
+    return this.taches.find(tache => tache.id === id);
   }
 
   async ngOnInit(): Promise<void> {
-    this.loadCategories();
+    this.taches = this.loadTaches();
 
     this.notifService.requestNotificationPermission();
-  }
-
-  
-
-  openTache( indexTache: number) {
-    // TODO faire une page pour l'affichage d'une tache
   }
 
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
-
-  
 
 }

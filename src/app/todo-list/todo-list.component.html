@@ -9,8 +9,9 @@
 
 <ion-content>
   <ion-list class="list-taches">
+   
     <ion-item *ngFor="let tache of taches; let i = index">
-      <ion-card>
+      <ion-card [ngClass]="{'tache-terminee': tache.status === 'Terminé'}">
         <ion-label class="list-tache-component" onclick="openTache(i)">
           <h2>{{ tache.title }}</h2>
           <p>Catégorie : {{ tache.category }} | Statut : {{ tache.status }}</p>
@@ -21,6 +22,7 @@
         <ion-button (click)="deleteTask(i)">Supprimer</ion-button>
     </ion-card>
     </ion-item>
+  
   </ion-list>
 
   <form [formGroup]="tacheForm" (ngSubmit)="addTask()">

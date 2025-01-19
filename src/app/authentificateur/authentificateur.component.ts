@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -17,46 +17,30 @@ export class AuthentificateurComponent {
   loginForm: FormGroup; 
   user: any = null; 
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService) {
-    
+  constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService, private alertController: AlertController) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
-
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      this.user = JSON.parse(savedUser);
-      this.router.navigate(['/todo-list']);
-    }
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    users.push({ username: 'admin', password: 'admin' });
-    localStorage.setItem('users', JSON.stringify(users));
   }
 
   login() {
     if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
-  
-      this.authService.login(username, password)
-        .then(() => {
-          console.log('Connexion réussie');
-          this.user = JSON.parse(localStorage.getItem('currentUser')!);
-          this.router.navigate(['/todo-list']);
-        })
-        .catch(err => {
-          console.error(err.message);
-          alert('Nom d’utilisateur ou mot de passe incorrect.');
-        });
-    } else {
-      console.error('Formulaire invalide');
+      const email = this.loginForm.controls["email"].value;
+      const password = this.loginForm.controls["password"].value;
+      this.authService.login(email, password).subscribe(
+        () => {
+          this.router.navigateByUrl('/todo-list');
+        },
+        async (error) => {
+          const alert = await this.alertController.create({
+            header: 'Error',
+            message: error.message || 'An error occurred during login',
+            buttons: ['Retour']
+          });
+          await alert.present();
+        }
+      );
     }
   }
-
-  logout() {
-    localStorage.removeItem('currentuser');
-    this.user = null;
-    console.log('Déconnexion réussie');
-  }
-
 }

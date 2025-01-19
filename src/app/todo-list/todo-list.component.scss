@@ -1,63 +1,126 @@
 .list-taches {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
 }
+
 .list-taches ion-card {
-    background-color: #1e1e2f;
-    color: #ffffff;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
+  background-color: #1e1e2f;
+  color: #ffffff;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 90vw;  /* 90% de la largeur de l'écran */
+  max-width: 600px; /* Limite pour éviter trop de largeur sur grands écrans */
+}
+
+.list-taches ion-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.list-taches ion-label {
+  padding: 12px;
+  font-family: 'Roboto', sans-serif;
+  display: block;
+  width: 100%;
+}
+
+.list-taches h2 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.list-taches p {
+  font-size: 0.9rem;
+  margin: 5px 0;
+  opacity: 0.8;
+}
+
+/* Boutons flexibles */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+  gap: 5px;
+}
+
+.list-taches ion-button {
+  --background: #007bff;
+  --background-hover: #0056b3;
+  border-radius: 5px;
+  color: white;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  flex: 1 1 auto; /* S'ajuste automatiquement à la taille du conteneur */
+  min-width: 100px;
+}
+
+.list-taches ion-button:last-child {
+  --background: #dc3545;
+  --background-hover: #a71d2a;
+}
+
+/* RESPONSIVE : Ajustements selon la taille de l'écran */
+@media screen and (max-width: 480px) {  /* Petits téléphones */
+  .list-taches ion-card {
+      width: 95vw;
   }
   
-  .list-taches ion-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-  }
-  
-  .list-taches ion-label {
-    padding: 15px;
-    font-family: 'Roboto', sans-serif;
-  }
-  
-  .list-taches h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .list-taches p {
-    font-size: 1rem;
-    margin: 5px 0;
-    opacity: 0.8;
-  }
-  
-  .list-taches ion-button {
-    --background: #007bff;
-    --background-hover: #0056b3;
-    margin: 5px;
-    border-radius: 5px;
-    color: white;
-  }
-  
-  .list-taches ion-button[status='Terminé'] {
-    --background: #28a745;
-    --background-hover: #19692c;
-  }
-  
-  .list-taches ion-button[status='En cours'] {
-    --background: #ffc107;
-    --background-hover: #b58900;
-  }
-  
-  .list-taches ion-button:last-child {
-    --background: #dc3545;
-    --background-hover: #a71d2a;
+  .button-group {
+      flex-direction: column;
+      align-items: center;
   }
 
-.list-tache-component {
-    margin: 5px;
+  .list-taches ion-button {
+      width: 90%;
+  }
 }
+
+@media screen and (min-width: 768px) {  /* Tablettes et grands écrans */
+  .list-taches {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+  
+  .list-taches ion-card {
+      width: 45vw;
+      margin: 10px;
+  }
+}
+
+.tache-terminee {
+  background-color: #177c2f !important;  /* Vert */
+  color: #ffffff !important;
+  opacity: 0.8;  /* Effet de transparence */
+  text-decoration: line-through; /* Barre le texte */
+}
+
+.tache-terminee h2, 
+.tache-terminee p {
+  color: #ffffff !important;
+}
+
+.tache-terminee:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+
+
+
+
+
+
+
+
+
 
 form {
     background-color: #1e1e2f;
