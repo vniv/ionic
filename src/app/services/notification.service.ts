@@ -35,11 +35,6 @@ export class NotificationService {
 
 
   async requestNotificationPermission() {
-    const permission = await LocalNotifications.requestPermissions();
-    if (permission.display === 'granted') {
-      console.log('Permission de notification accordée.');
-    } else {
-      console.error('Permission de notification refusée.');
-    }
+    await LocalNotifications.requestPermissions();
   }
 }

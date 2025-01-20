@@ -26,9 +26,9 @@ export class AuthentificateurComponent {
 
   login() {
     if (this.loginForm.valid) {
-      const email = this.loginForm.controls["email"].value;
+      const username = this.loginForm.controls["username"].value;
       const password = this.loginForm.controls["password"].value;
-      this.authService.login(email, password).subscribe(
+      this.authService.login(username, password).subscribe(
         () => {
           this.router.navigateByUrl('/todo-list');
         },

@@ -8,6 +8,8 @@ import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 import { Tache } from '../models/tache.model';
 import { Utilis } from '../models/utilis.model';
+import { DatabaseService } from '../services/database.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,7 +21,7 @@ import { Utilis } from '../models/utilis.model';
 export class TodoListComponent implements OnInit {
 
   tacheForm: FormGroup;
-  constructor (private formBuilder: FormBuilder, private router: Router, private authService: AuthService, private notifService: NotificationService) {
+  constructor (private formBuilder: FormBuilder, private router: Router, private authService: AuthService, private notifService: NotificationService, private databaseService: DatabaseService) {
     this.tacheForm = this.formBuilder.group({
       title: ['', Validators.required],
       category: ['', Validators.required],
@@ -69,14 +71,13 @@ export class TodoListComponent implements OnInit {
 
   updateStatus(index: number, status: string) {
     const currentUser = this.authService.getCurrentUser();
-    this.taches[index].status = status;
+    this.taches[index].statut = status;
     currentUser.todoList = this.taches;
     this.saveTaches(currentUser);
   }
 
   saveTaches(currentUser: Utilis) {
     this.authService.updateCurrentUser(currentUser).subscribe();
-    localStorage.setItem('currentUser', JSON.stringify(this.taches));
   }
 
   loadTaches() {

@@ -31,14 +31,14 @@ export class AuthService {
     });*/ 
 
     
-    return this.apiService.getData(`users/${username}`).pipe(
+    return this.apiService.getData(`utilis/${username}`).pipe(
       map((response: any) => {
 
         let user: Utilis;
   
         if (response && typeof response === 'object') {
 
-          if (response.email) {
+          if (response.username) {
             user = response as Utilis;
           } else {
             const userKey = Object.keys(response)[0];
@@ -55,7 +55,7 @@ export class AuthService {
           localStorage.setItem('currentUser', JSON.stringify(user));
           this._isAuthenticated.next(true);
         } else {
-          throw new Error('Invalid email or password');
+          throw new Error('Invalid username or password');
         }
       })
     );
@@ -81,7 +81,7 @@ export class AuthService {
   }
 
   updateCurrentUser(user: Utilis): Observable<void> {
-    return this.apiService.putData(`users/${user.username}`, JSON.stringify(user)).pipe(
+    return this.apiService.putData(`utilis/${user.username}`, JSON.stringify(user)).pipe(
       tap(() => {
         localStorage.setItem('currentUser', JSON.stringify(user));
       })
