@@ -9,7 +9,6 @@ import { NotificationService } from '../services/notification.service';
 import { Tache } from '../models/tache.model';
 import { Utilis } from '../models/utilis.model';
 import { DatabaseService } from '../services/database.service';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -33,9 +32,11 @@ export class TodoListComponent implements OnInit {
   groupedTasks: { [key: string]: any[] } = {};
 
   addTask() {
+    let tache: Tache;
     if (this.tacheForm.valid) {
       const currentUser = this.authService.getCurrentUser();
-      const tache = this.tacheForm.value;
+      tache = this.tacheForm.value;
+      tache.statut = "En cours";
       this.taches.push(tache);
 
       if(currentUser) {
@@ -45,6 +46,7 @@ export class TodoListComponent implements OnInit {
       }
 
       this.notifService.requestNotificationPermission();
+      this.notifService.testNotification();
 
       this.notifService.scheduleNotification(tache, this.taches.length - 1);
 
@@ -69,9 +71,11 @@ export class TodoListComponent implements OnInit {
     this.authService.updateCurrentUser(currentUser).subscribe();
   }
 
-  updateStatus(index: number, status: string) {
+  updateStatus(index: number, statut: string) {
     const currentUser = this.authService.getCurrentUser();
-    this.taches[index].statut = status;
+    this.taches = this.taches.map((tache, i) =>
+      i === index ? { ...tache, statut } : tache
+    );
     currentUser.todoList = this.taches;
     this.saveTaches(currentUser);
   }

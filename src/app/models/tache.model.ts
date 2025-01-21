@@ -1,6 +1,6 @@
 export interface Tache {
     title: string;
     category: string;
-    satut: string;
+    statut: string;
     deadline: Date;
 }

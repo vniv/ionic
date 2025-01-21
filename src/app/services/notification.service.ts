@@ -20,7 +20,7 @@ export class NotificationService {
             title: 'Rappel de tâche',
             body: `La tâche "${tache.title}" est à rendre pour aujourd'hui.`,
             schedule: {
-              at: deadlineDate,
+              at: new Date(deadlineDate.() + 5000),
             },
             sound: 'default',
             smallIcon: 'icon',
@@ -36,5 +36,19 @@ export class NotificationService {
 
   async requestNotificationPermission() {
     await LocalNotifications.requestPermissions();
+  }
+
+
+  async testNotification() {
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: 1,
+          title: "Notification Test",
+          body: "Ceci est une notification locale",
+          schedule: { at: new Date(Date.now() + 5000) }
+        }
+      ]
+    });
   }
 }

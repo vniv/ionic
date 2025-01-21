@@ -11,11 +11,11 @@
   <ion-list class="list-taches">
    
     <ion-item *ngFor="let tache of taches; let i = index">
-      <ion-card [ngClass]="{'tache-terminee': tache.status === 'Terminé'}">
+      <ion-card [ngClass]="{'tache-terminee': tache.statut === 'Terminé'}">
         <ion-label class="list-tache-component" onclick="openTache(i)">
           <h2>{{ tache.title }}</h2>
-          <p>Catégorie : {{ tache.category }} | Statut : {{ tache.status }}</p>
-          <p>À rendre : {{ tache.deadline }}</p>
+          <p>Catégorie : {{ tache.category }} | Statut : {{ tache.statut }}</p>
+          <p>À faire pour : {{ tache.deadline }}</p>
         </ion-label>
         <ion-button (click)="updateStatus(i, 'En cours')">En cours</ion-button>
         <ion-button (click)="updateStatus(i, 'Terminé')">Terminé</ion-button>
