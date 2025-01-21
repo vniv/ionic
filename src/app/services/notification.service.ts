@@ -20,7 +20,7 @@ export class NotificationService {
             title: 'Rappel de tâche',
             body: `La tâche "${tache.title}" est à rendre pour aujourd'hui.`,
             schedule: {
-              at: new Date(deadlineDate.() + 5000),
+              at: new Date(deadlineDate.getDate() + 5000),
             },
             sound: 'default',
             smallIcon: 'icon',
